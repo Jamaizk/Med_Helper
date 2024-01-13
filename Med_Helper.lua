@@ -7559,7 +7559,7 @@ function main()
 		end
 
 		if configuration.main_settings.autoupdate and clock() - autoupd[0] > 600 then
-			checkUpdates('https://raw.githubusercontent.com/EvilDukky/MedHelper/main/Update/update.json')
+			checkUpdates('https://raw.githubusercontent.com/Jamazik/Med_Helper/main/Update/update.json')
 			autoupd[0] = clock()
 		end
 
