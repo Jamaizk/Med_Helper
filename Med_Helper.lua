@@ -5361,7 +5361,7 @@ local imgui_settings = imgui.OnFrame(
 									imgui.PopFont()
 									imgui.Spacing()
 									if imgui.Button(u8'Проверить наличие обновлений') then
-										checkUpdates('https://raw.githubusercontent.com/Jamaizk/Med_Helper1/main/Update/update.json', true)
+										checkUpdates('https://raw.githubusercontent.com/Jamaizk/Med_Helper/main/Update/update.json', true)
 									end
 								imgui.EndGroup()
 							else
@@ -5390,6 +5390,14 @@ local imgui_settings = imgui.OnFrame(
 								configuration.main_settings.autoupdate = auto_update_box[0]
 								inicfg.save(configuration,'Med Helper')
 							end
+							imgui.SetCursorPosX(30)
+							if imgui.ToggleButton(u8'Получать бета релизы', get_beta_upd_box) then
+								configuration.main_settings.getbetaupd = get_beta_upd_box[0]
+								inicfg.save(configuration,'Med Helper')
+							end
+							imgui.SameLine()
+							imgui.Text(fa.ICON_FA_QUESTION_CIRCLE)
+							imgui.Hint('betareleaseshint', 'После включения данной функции Вы будете получать\nобновления раньше других людей для тестирования и\nсообщения о багах разработчику.\n{FF1010}Работа этих версий не будет гарантирована.')
 						imgui.EndGroup()
 					elseif infowindow[0] == 2 then
 						imgui.SetCursorPos(imgui.ImVec2(15,15))
@@ -5403,8 +5411,8 @@ local imgui_settings = imgui.OnFrame(
 								end)
 							end
 							imgui.PushFont(font[15])
-							imgui.TextColoredRGB('Автор - Jamazik')
-							imgui.TextColoredRGB('За основу был взят AS Helper - Jamazik')
+							imgui.TextColoredRGB('Автор - {MC}EvilDukky')
+							imgui.TextColoredRGB('За основу был взят AS Helper - {MC}JustMini')
 							imgui.PopFont()
 							imgui.NewLine()
 
@@ -5414,7 +5422,7 @@ local imgui_settings = imgui.OnFrame(
 							imgui.SameLine(40)
 							imgui.Text(u8'Связаться со мной в VK:')
 							imgui.SameLine(190)
-							imgui.Link('https://vk.com/zombieziz', u8'vk.com/zombieziz')
+							imgui.Link('https://vk.com/evil.duckky', u8'vk.com/evil.duckky')
 
 							imgui.Spacing()
 
@@ -5424,7 +5432,7 @@ local imgui_settings = imgui.OnFrame(
 							imgui.SameLine(40)
 							imgui.Text(u8'ПоДжержать разработку:')
 							imgui.SameLine(190)
-							imgui.Link('https://www.donationalerts.com/r/jamazik', 'donationalerts.com/r/jamazik')
+							imgui.Link('https://www.donationalerts.com/r/evil_d', 'donationalerts.com/r/evil_d')
 						imgui.EndGroup()
 					elseif infowindow[0] == 3 then
 						imgui.SetCursorPos(imgui.ImVec2(15,15))
@@ -7559,7 +7567,7 @@ function main()
 		end
 
 		if configuration.main_settings.autoupdate and clock() - autoupd[0] > 600 then
-			checkUpdates('https://raw.githubusercontent.com/Jamazik/Med_Helper/main/Update/update.json')
+			checkUpdates('https://raw.githubusercontent.com/Jamaizk/Med_Helper/main/Update/update.json')
 			autoupd[0] = clock()
 		end
 
