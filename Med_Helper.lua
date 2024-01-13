@@ -31,8 +31,8 @@
 
 script_name('Med Helper')
 script_description('Удобный помощник для Больницы.')
-script_author('EvilDukky')
-script_version('1.2')
+script_author('Jamazik')
+script_version('1.3')
 script_dependencies('mimgui; samp events; lfs; MoonMonet')
 
 require 'moonloader'
@@ -117,7 +117,7 @@ if not imguicheck or not sampevcheck or not encodingcheck or not lfscheck or not
 			end
 		end)
 
-		sampAddChatMessage(('[MedHelper]{EBEBEB} Началось скачивание необходимых файлов. Если скачивание не удастся, то обратитесь к {FF33F2}vk.com/evil.duckky{ebebeb}.'),0xFF33F2)
+		sampAddChatMessage(('[MedHelper]{EBEBEB} Началось скачивание необходимых файлов. Если скачивание не удастся, то обратитесь к {FF33F2}vk.com/zombieziz{ebebeb}.'),0xFF33F2)
 
 		if not imguicheck then -- Нашел только релизную версию в архиве, так что пришлось залить файлы сюда, при обновлении буду обновлять и у себя
 			print('{FFFF00}Скачивание: mimgui')
@@ -180,7 +180,7 @@ if not imguicheck or not sampevcheck or not encodingcheck or not lfscheck or not
 			createDirectory('moonloader/Med Helper')
 			createDirectory('moonloader/Med Helper/Images')
 			DownloadFiles({theme = 'PNG Файлы',
-				{url = 'https://raw.githubusercontent.com/EvilDukky/MedHelper/main/MedH_Images.png', file = 'moonloader/Med Helper/Images/MedH_Images.png', name = 'MedH_Images.png'},
+				{url = 'https://raw.githubusercontent.com/Jamazik/Med_Helper/main/MedH_Images.png', file = 'moonloader/Med Helper/Images/MedH_Images.png', name = 'MedH_Images.png'},
 			})
 			print('{00FF00}PNG Файлы успешно скачаны')
 		end
@@ -4207,7 +4207,7 @@ local imgui_settings = imgui.OnFrame(
 				imgui.PopStyleColor(3)
 				imgui.SetCursorPos(imgui.ImVec2(217, 23))
 				imgui.TextColored(imgui.GetStyle().Colors[imgui.Col.Border],'v. '..thisScript().version)
-				imgui.Hint('lastupdate','Обновление от 08.02.2023')
+				imgui.Hint('lastupdate','Обновление от 13.01.24')
 				imgui.PushStyleVarVec2(imgui.StyleVar.WindowPadding, imgui.ImVec2(15,15))
 				if imgui.BeginPopupModal(u8'Все команды', _, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoScrollbar + imgui.WindowFlags.AlwaysAutoResize + imgui.WindowFlags.NoTitleBar) then
 					imgui.PushFont(font[16])
@@ -5390,14 +5390,6 @@ local imgui_settings = imgui.OnFrame(
 								configuration.main_settings.autoupdate = auto_update_box[0]
 								inicfg.save(configuration,'Med Helper')
 							end
-							imgui.SetCursorPosX(30)
-							if imgui.ToggleButton(u8'Получать бета релизы', get_beta_upd_box) then
-								configuration.main_settings.getbetaupd = get_beta_upd_box[0]
-								inicfg.save(configuration,'Med Helper')
-							end
-							imgui.SameLine()
-							imgui.Text(fa.ICON_FA_QUESTION_CIRCLE)
-							imgui.Hint('betareleaseshint', 'После включения данной функции Вы будете получать\nобновления раньше других людей для тестирования и\nсообщения о багах разработчику.\n{FF1010}Работа этих версий не будет гарантирована.')
 						imgui.EndGroup()
 					elseif infowindow[0] == 2 then
 						imgui.SetCursorPos(imgui.ImVec2(15,15))
@@ -5411,7 +5403,7 @@ local imgui_settings = imgui.OnFrame(
 								end)
 							end
 							imgui.PushFont(font[15])
-							imgui.TextColoredRGB('Автор - {MC}EvilDukky')
+							imgui.TextColoredRGB('Автор - {MC}Jamazik')
 							imgui.TextColoredRGB('За основу был взят AS Helper - {MC}JustMini')
 							imgui.PopFont()
 							imgui.NewLine()
@@ -5422,17 +5414,7 @@ local imgui_settings = imgui.OnFrame(
 							imgui.SameLine(40)
 							imgui.Text(u8'Связаться со мной в VK:')
 							imgui.SameLine(190)
-							imgui.Link('https://vk.com/evil.duckky', u8'vk.com/evil.duckky')
-
-							imgui.Spacing()
-
-							imgui.TextWrapped(u8'Если Вы находите этот скрипт полезным, то можете поДжержать разработку деньгами.')
-							imgui.SetCursorPosX(25)
-							imgui.TextColored(imgui.ImVec4(0.31,0.78,0.47,1), fa.ICON_FA_GEM)
-							imgui.SameLine(40)
-							imgui.Text(u8'ПоДжержать разработку:')
-							imgui.SameLine(190)
-							imgui.Link('https://www.donationalerts.com/r/evil_d', 'donationalerts.com/r/evil_d')
+							imgui.Link('https://vk.com/zombieziz', u8'vk.com/zombieziz')
 						imgui.EndGroup()
 					elseif infowindow[0] == 3 then
 						imgui.SetCursorPos(imgui.ImVec2(15,15))
@@ -5445,20 +5427,7 @@ local imgui_settings = imgui.OnFrame(
 								windows.imgui_changelog[0] = true
 							end
 							imgui.Separator()
-							imgui.TextWrapped(u8[[
-	* Med Helper - удобный помощник, который облегчит Вам работу в Больнице. Скрипт был разработан специально для проекта Arizona RP. Скрипт имеет открытый код для ознакомления, любое выставление скрипта без указания авторства запрещено! Обновления скрипта происходят безопасно для Вас, автообновления нет, установку должны подтверждать Вы.
-
-	* Меню быстрого доступа - Прицелившись на игрока с помощью ПКМ и нажав кнопку E (по умолчанию), откроется меню быстрого доступа. В данном меню есть все нужные функции, а именно: приветствие, лечение больных, продажа антибиотиков, проведение реанимации, выдача мед.карт, продажа рецептов, снятие наркозависимости, выкцинация от коронавируса, продажа страховок, выведение татуировок, проведение мед.осмотра, возможность выгнать человека из больницы, приглашение в организацию, увольнение из организации, изменение должности, занесение в ЧС, удаление из ЧС, выдача выговоров, удаление выговоров, выдача организационного мута, удаление организационного мута, автоматизированное проведение собеседования со всеми нужными отыгровками.
-
-	* Команды сервера с отыгровками - /invite, /uninvite, /giverank, /blacklist, /unblacklist, /fwarn, /unfwarn, /fmute, /funmute, /expel. Введя любую из этих команд начнётся РП отыгровка, лишь после неё будет активирована сама команда (эту функцию можно отключить в настройках).
-
-	* Команды хелпера - /mhm - настройки хелпера, /mhmbind - биндер хелпера, /mhmlect - меню лекций, /mhmdep - меню департамента
-
-	* Настройки - Введя команду /mhm откроются настройки в которых можно изменять никнейм в приветствии, акцент, создание маркера при выделении, пол, цены на услуги больницы, горячую клавишу быстрого меню и многое другое.
-
-	* Меню лекций - Введя команду /mhmlect откроется меню лекций, в котором вы сможете озвучить/добавить/удалить лекции.
-
-	* Биндер - Введя команду /mhmbind откроется биндер, в котором вы можете создать абсолютно любой бинд на команду, или же кнопку(и).]])
+							imgui.TextWrapped(u8[[Убраны лишние строки]])
 						imgui.Spacing()
 						imgui.EndGroup()
 					end
@@ -6349,7 +6318,7 @@ function sampev.onShowDialog(dialogId, style, title, button1, button2, text)
 			end
 		else
 			print('{FF0000}Игрок не работает в больнице. Скрипт был выгружен.')
-			MedHelperMessage('Вы не работаете в больнице, скрипт выгружен! Если это ошибка, то обратитесь к {MC}vk.com/evil.duckky{WC}.')
+			MedHelperMessage('Вы не работаете в больнице, скрипт выгружен! Если это ошибка, то обратитесь к {MC}vk.com/zombieziz{WC}.')
 			NoErrors = true
 			thisScript():unload()
 		end
@@ -6878,7 +6847,7 @@ function onScriptTerminate(script, quitGame)
 - В папке moonloader > config > Удаляем файл Med Helper.ini
 - В папке moonloader > Удаляем папку Med Helper
 4. Если ничего из вышеперечисленного не исправило ошибку, то следует установить скрипт на другую сборку.
-5. Если даже это не помогло Вам, то отправьте автору {2594CC}(vk.com/evil.duckky){FF33F2} скриншот ошибки.{FFFFFF}
+5. Если даже это не помогло Вам, то отправьте автору {2594CC}(vk.com/zombieziz){FF33F2} скриншот ошибки.{FFFFFF}
 ———————————————————————————————————————————————————————
 {C0C0C0}]]..moonlog, 'ОК', nil, 0)
 	end
