@@ -269,7 +269,7 @@ local configuration = inicfg.load({
 	},
 
 	Checker = {
-    	state = true,
+    	state = false,
     	delay = 10,
     	afk_max_l = 300,
     	afk_max_h = 300,
