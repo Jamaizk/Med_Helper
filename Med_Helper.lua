@@ -217,6 +217,7 @@ local configuration = inicfg.load({
 		replaceash = false,
 		dofastscreen = true,
 		dofastexpel = true,
+		dofastheal = true,
 		noscrollbar = true,
 		playdubinka = false,
 		changelog = false,
@@ -228,6 +229,7 @@ local configuration = inicfg.load({
 		usefastmenu = 'E',
 		fastscreen = 'F4',
 		fastexpel = 'G',
+		fastheal = 'Q',
 		heal = 10000,
 		medcard74 = 1000,
 		medcard7 = 30000,
@@ -242,7 +244,7 @@ local configuration = inicfg.load({
 		str14 = 800000,
 		str21 = 1200000,
 		tatu = 50000,
-		osm = 1000000,
+		osm = 500000,
 		RChatColor = 4282626093,
 		DChatColor = 4294940723,
 		ASChatColor = 4281558783,
@@ -599,6 +601,7 @@ local usersettings = {
 	replaceash						= new.bool(configuration.main_settings.replaceash),
 	dofastscreen					= new.bool(configuration.main_settings.dofastscreen),
 	dofastexpel						= new.bool(configuration.main_settings.dofastexpel),
+	dofastheal						= new.bool(configuration.main_settings.dofastheal),
 	noscrollbar						= new.bool(configuration.main_settings.noscrollbar),
 	playdubinka						= new.bool(configuration.main_settings.playdubinka),
 	bodyrank						= new.bool(configuration.main_settings.bodyrank),
@@ -4248,6 +4251,9 @@ local imgui_settings = imgui.OnFrame(
 						if configuration.main_settings.dofastexpel then
 							imgui.TextColoredRGB('ПКМ + '..configuration.main_settings.fastexpel..' - Быстрый /expel')
 						end
+						if configuration.main_settings.dofastheal then
+							imgui.TextColoredRGB('ПКМ + '..configuration.main_settings.fastheal..' - Быстрый /heal')
+						end
 						imgui.TextColoredRGB(configuration.main_settings.fastscreen..' - Быстрый скриншот')
 						imgui.TextColoredRGB('Page down - Остановить отыгровку')
 					imgui.EndGroup()
@@ -4504,6 +4510,16 @@ local imgui_settings = imgui.OnFrame(
 									imgui.SameLine(nil, 5)
 									imgui.SetCursorPosY(imgui.GetCursorPosY() - 4)
 									imgui.HotKey('быстрый /expel', configuration.main_settings, 'fastexpel', 'G', find(configuration.main_settings.fastexpel, '+') and 150 or 75)
+									
+									if imgui.ToggleButton(u8'Быстрый heal на', usersettings.dofastheal) then
+										configuration.main_settings.dofastheal = usersettings.dofastheal[0]
+										inicfg.save(configuration,'Med Helper')
+									end
+									imgui.SameLine(nil, 20)
+									imgui.Text(u8'ПКМ +')
+									imgui.SameLine(nil, 5)
+									imgui.SetCursorPosY(imgui.GetCursorPosY() - 4)
+									imgui.HotKey('быстрый /heal', configuration.main_settings, 'fastheal', 'Q', find(configuration.main_settings.fastheal, '+') and 150 or 75)
 
 									imgui.PushItemWidth(85)
 									if imgui.InputText(u8'##expelreasonbuff',usersettings.expelreason,sizeof(usersettings.expelreason)) then
@@ -7423,7 +7439,31 @@ function main()
 				end
 			end
 		end
-
+		--[[тест]]--
+			if isKeysDown(configuration.main_settings.fastheal) and not sampIsChatInputActive() and configuration.main_settings.dofastheal then
+				if sampGetPlayerIdByCharHandle(select(2,getCharPlayerIsTargeting())) then
+					if configuration.main_settings.myrankint > 1 then
+						local id = select(2,sampGetPlayerIdByCharHandle(select(2,getCharPlayerIsTargeting())))
+						if not sampIsPlayerPaused(id) then
+							sendchatarray(configuration.main_settings.playcd, {
+								{'/me нырнув правой рукой в карман, {gender:вытянул|вытянула} оттуда блокнот и ручку'},
+								{'/todo Так-так, хорошо, не волнуйтесь*записав все сказанное человеком напротив'},
+								{'/me движением правой руки {gender:открыл|открыла} мед.кейс'},
+								{'/me несколькими движениями рук {gender:нашел|нашла} нужное лекарство в мед.чемодане'},
+								{'/do Лекарство в правой руке.'},
+								{'/me аккуратным движением руки {gender:передал|передала} лекарство пациенту'},
+								{'Принимайте эти таблетки, и через некоторое время вам станет лучше.'},
+								{'/heal %s %s',id,configuration.main_settings.heal},
+							})
+						else
+							MedHelperMessage('Игрок находится в АФК!')
+						end
+					else
+						MedHelperMessage('Данное действие доступно с 1-го ранга.')
+					end
+				end
+			end
+		--[[тест]]--
 		if isKeysDown(configuration.main_settings.fastscreen) and configuration.main_settings.dofastscreen and (clock() - tHotKeyData.lasted > 0.1) and not sampIsChatInputActive() then
 			sampSendChat('/time')
 			wait(500)
@@ -7603,6 +7643,20 @@ changelog = {
 				active = false,
 				text = [[
  - Убрана система вакцинации от коронавируса]]
+			},
+		},
+		
+		{
+			version = '1.3',
+			date = '13.01.2024',
+			text = {
+				'Меню на отыгровку военного билета /mticket',
+				'Быстрое использование /heal без меню(ПКМ+Q).',
+			},
+			patches = {
+				active = false,
+				text = [[
+ - Убраны лишние строки]]
 			},
 		},
 		
