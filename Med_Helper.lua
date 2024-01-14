@@ -520,10 +520,8 @@ local voenka						= new.int(0)
 local osmtap						= new.int(0)
 local rectap						= new.int(0)
 local narkotap						= new.int(0)
-local koronatap						= new.int(0)
 local strtap						= new.int(0)
 local tatutap						= new.int(0)
-local osmotrtap						= new.int(0)
 local lastsobesetap					= new.int(0)
 local lastmedtap						= new.int(0)
 local medtimeid						= new.int(0)
@@ -698,11 +696,9 @@ local fmbuttons = {
 	{name = u8'Мед.осмотр', rank = 4},
 	{name = u8'Рецепт', rank = 4},
 	{name = u8'Наркозависимость', rank = 4},
-	{name = u8'Осмотр', rank = 4},
 	{name = u8'Выведение тату', rank = 7},
 	{name = u8'Собеседование', rank = 9},
-	{name = u8'Проверка устава', rank = 9},
-	{name = u8'Лидерские действия', rank = 10},
+	{name = u8'Меню людера/зама', rank = 9},
 }
 local settingsbuttons = {
 	fa.ICON_FA_USER..u8(' Пользователь'),
@@ -3203,159 +3199,6 @@ local imgui_fm = imgui.OnFrame(
 
 					elseif newwindowtype[0] == 9 then
 						imgui.SetCursorPos(imgui.ImVec2(15,20))
-						if osmotrtap[0] == 0 then
-							imgui.TextColoredRGB('Осмотр: Этап 1',1)
-							imgui.Separator()
-							medtimeid = 0
-							imgui.SetCursorPosX(7.5)
-							imgui.Button(u8'Попросить мед.карту ', imgui.ImVec2(285,30))
-							if imgui.IsItemHovered() then
-								if imgui.IsMouseReleased(0) then
-									if not inprocess then
-										local result, mid = sampGetPlayerIdByCharHandle(playerPed)
-										sendchatarray(configuration.main_settings.playcd, {
-											{'Здравствуйте, сейчас я проведу для Вас небольшое мед.обследование.'},
-											{'Предоставьте пожалуйста, мед. карту.'},
-										})
-										osmotrtap[0] = 1
-									else
-										MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-									end
-								end
-							end
-						end
-					
-						if osmotrtap[0] == 1 then
-							imgui.TextColoredRGB('Осмотр: Этап 2',1)
-							imgui.Separator()
-							if configuration.med_settings.pass then
-								imgui.TextColoredRGB(sobes_results.medcard and 'Мед. карта - показана ('..sobes_results.medcard..')' or 'Мед. карта - не показана',1)
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Продолжить '..fa.ICON_FA_ARROW_RIGHT, imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sendchatarray(configuration.main_settings.playcd, {
-										{'/me {gender:взял|взяла} мед.карту из рук человек'},
-										{'/do Мед.карта в руках.'},
-										{'Итак, сейчас я задам некоторые вопросы для оценки состояния здоровья.'},
-									})
-									osmotrtap[0] = 2
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-								
-						end
-
-						if osmotrtap[0] == 2 then
-							imgui.TextColoredRGB('Осмотр: Этап 3',1)
-							imgui.Separator()
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Давно болели?', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sampSendChat("Давно ли Вы болели? Если да, то какими болезнями.")
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Были ли у Вас травмы?', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sampSendChat("Были ли у Вас травмы?")
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Аллергические реакции', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sampSendChat("Имеются ли какие-то аллергические реакции?")
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Продолжить '..fa.ICON_FA_ARROW_RIGHT, imgui.ImVec2(285,30)) then
-								if not inprocess then
-									osmotrtap[0] = 3
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-						end
-
-						if osmotrtap[0] == 3 then
-							imgui.TextColoredRGB('Осмотр: Этап 4',1)
-							imgui.Separator()
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Записи в мед. карте', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sendchatarray(configuration.main_settings.playcd, {
-										{'/me {gender:сделал|сделала} записи в мед.карте'},
-										{'Так, откройте рот.'},
-										{'/b /me открыл(а) рот'},
-									})
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Визуальный осмотр', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sendchatarray(configuration.main_settings.playcd, {
-										{'/do В кармане фонарик.'},
-										{'/me {gender:достал|достала} фонарик из кармана и {gender:включил|включила} его'},
-										{'/me {gender:осмотрел|осмотрела} горло пациента'},
-										{'Можете закрыть рот.'},
-										{'/me {gender:проверил|проверила} реакцию зрачков пациента на свет, посветив в глаза'},
-										{'/do Зрачки глаз обследуемого сузились.'},
-										{'/me {gender:выключил|выключила} фонарик и {gender:убрал|убрала} его в карман'},
-										{'Присядьте, пожалуйста, на корточки и коснитесь кончиком пальца до носа.'},
-									})
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							imgui.SetCursorPosX(7.5)
-							if imgui.Button(u8'Возврат мед.карты', imgui.ImVec2(285,30)) then
-								if not inprocess then
-									sendchatarray(configuration.main_settings.playcd, {
-										{'/me {gender:сделал|сделала} записи в мед.карте'},
-										{'/me {gender:вернул|вернула} мед.карту человеку напротив'},
-										{'Спасибо, можете быть свободны.'},
-									})
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-						end
-					
-						imgui.SetCursorPos(imgui.ImVec2(15,240))
-						if osmotrtap[0] ~= 0 then
-							if imgui.InvisibleButton('##medbackbutton',imgui.ImVec2(55,15)) then
-								if osmotrtap[0] ~= 0 then osmotrtap[0] = osmotrtap[0] - 1
-								end
-							end
-							imgui.SetCursorPos(imgui.ImVec2(15,240))
-							imgui.PushFont(font[16])
-							imgui.TextColored(imgui.IsItemHovered() and imgui.GetStyle().Colors[imgui.Col.Text] or imgui.GetStyle().Colors[imgui.Col.TextDisabled], fa.ICON_FA_CHEVRON_LEFT..u8' Назад')
-							imgui.PopFont()
-							imgui.SameLine()
-						end
-						imgui.SetCursorPosY(240)
-						if osmotrtap[0] ~= 3 then
-							imgui.SetCursorPosX(195)
-							if imgui.InvisibleButton('##medforwardbutton',imgui.ImVec2(125,15)) then
-								osmotrtap[0] = osmotrtap[0] + 1
-							end
-							imgui.SetCursorPos(imgui.ImVec2(195, 240))
-							imgui.PushFont(font[16])
-							imgui.TextColored(imgui.IsItemHovered() and imgui.GetStyle().Colors[imgui.Col.Text] or imgui.GetStyle().Colors[imgui.Col.TextDisabled], u8'Пропустить '..fa.ICON_FA_CHEVRON_RIGHT)
-							imgui.PopFont()
-						end
-
-					elseif newwindowtype[0] == 10 then
-						imgui.SetCursorPos(imgui.ImVec2(15,20))
 						if sobesetap[0] == 0 then
 							imgui.TextColoredRGB('Собеседование: Этап 1',1)
 							imgui.Separator()
@@ -3520,7 +3363,7 @@ local imgui_fm = imgui.OnFrame(
 							imgui.PopStyleColor(2)
 						end
 					
-						if sobesetap[0] == 7 then
+						if sobesetap[0] == 7 then 
 							imgui.TextColoredRGB('Собеседование: Отклонение',1)
 							imgui.Separator()
 							imgui.PushItemWidth(270)
@@ -3626,200 +3469,8 @@ local imgui_fm = imgui.OnFrame(
 							imgui.TextColored(imgui.IsItemHovered() and imgui.GetStyle().Colors[imgui.Col.Text] or imgui.GetStyle().Colors[imgui.Col.TextDisabled], u8'Пропустить '..fa.ICON_FA_CHEVRON_RIGHT)
 							imgui.PopFont()
 						end
-
-					elseif newwindowtype[0] == 11 then
-						imgui.SetCursorPos(imgui.ImVec2(7.5, 15))
-						imgui.BeginGroup()
-							if not serverquestions['server'] then
-								QuestionType_select[0] = 1
-							end
-							if QuestionType_select[0] == 0 then
-								imgui.TextColoredRGB(serverquestions['server'], 1)
-								for k = 1, #serverquestions do
-									if imgui.Button(u8(serverquestions[k].name)..'##'..k, imgui.ImVec2(275, 30)) then
-										if not inprocess then
-											MedHelperMessage('Подсказка: '..serverquestions[k].answer)
-											sampSendChat(serverquestions[k].question)
-											lastq[0] = clock()
-										else
-											MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-										end
-									end
-								end
-							elseif QuestionType_select[0] == 1 then
-								if #questions.questions ~= 0 then
-									for k,v in pairs(questions.questions) do
-										if imgui.Button(u8(v.bname)..'##'..k, imgui.ImVec2(questions.active.redact and 200 or 275,30)) then
-											if not inprocess then
-												MedHelperMessage('Подсказка: '..v.bhint)
-												sampSendChat(v.bq)
-												lastq[0] = clock()
-											else
-												MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-											end
-										end
-										if questions.active.redact then
-											imgui.SameLine()
-											imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(1,1,1,0))
-											imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(1,1,1,0))
-											imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(1,1,1,0))
-											if imgui.Button(fa.ICON_FA_PEN..'##'..k, imgui.ImVec2(20,25)) then
-												question_number = k
-												imgui.StrCopy(questionsettings.questionname, u8(v.bname))
-												imgui.StrCopy(questionsettings.questionhint, u8(v.bhint))
-												imgui.StrCopy(questionsettings.questionques, u8(v.bq))
-												imgui.OpenPopup(u8('Редактор вопросов'))
-											end
-											imgui.SameLine()
-											if imgui.Button(fa.ICON_FA_TRASH..'##'..k, imgui.ImVec2(20,25)) then
-												table.remove(questions.questions,k)
-												local file = io.open(getWorkingDirectory()..'\\Med Helper\\Questions.json', 'w')
-												file:write(encodeJson(questions))
-												file:close()
-											end
-											imgui.PopStyleColor(3)
-										end
-									end
-								end
-							end
-						imgui.EndGroup()
-						imgui.NewLine()
-						imgui.SetCursorPosX(7.5)
-						imgui.Text(fa.ICON_FA_CLOCK..' '..(lastq[0] == 0 and u8'0 с. назад' or floor(clock()-lastq[0])..u8' с. назад'))
-						imgui.Hint('lastustavquesttime','Прошедшее время с последнего вопроса.')
-						imgui.SetCursorPosX(7.5)
-						imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(0.00, 0.40, 0.00, 1.00))
-						imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(0.00, 0.30, 0.00, 1.00))
-						imgui.Button(u8'Одобрить', imgui.ImVec2(130,30))
-						if imgui.IsItemHovered() and (imgui.IsMouseReleased(0) or imgui.IsMouseReleased(1)) then
-							if imgui.IsMouseReleased(0) then
-								if not inprocess then
-									windows.imgui_fm[0] = false
-									sampSendChat(format('Поздравляю, %s, Вы сдали устав!', gsub(sampGetPlayerNickname(fastmenuID), '_', ' ')))
-								else
-									MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-								end
-							end
-							if imgui.IsMouseReleased(1) then
-								if configuration.main_settings.myrankint >= 9 then
-									windows.imgui_fm[0] = false
-									sendchatarray(configuration.main_settings.playcd, {
-										{'Поздравляю, %s, Вы сдали устав!', gsub(sampGetPlayerNickname(fastmenuID), '_', ' ')},
-										{'/me {gender:включил|включила} планшет'},
-										{'/me {gender:перешёл|перешла} в раздел \'Управление сотрудниками\''},
-										{'/me {gender:выбрал|выбрала} в разделе нужного сотрудника'},
-										{'/me {gender:изменил|изменила} информацию о должности сотрудника, после чего {gender:подтведрдил|подтвердила} изменения'},
-										{'/do Информация о сотруднике была изменена.'},
-										{'Поздравляю с повышением. Новый бейджик Вы можете взять в раздевалке.'},
-										{'/giverank %s 2', fastmenuID},
-									})
-								else
-									MedHelperMessage('Данная команда доступна с 9-го ранга.')
-								end
-							end
-						end
-						imgui.Hint('ustavhint','ЛКМ для информирования о сдаче устава\nПКМ для повышения до 2-го ранга')
-						imgui.PopStyleColor(2)
-						imgui.SameLine()
-
-						imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(0.40, 0.00, 0.00, 1.00))
-						imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(0.30, 0.00, 0.00, 1.00))
-						if imgui.Button(u8'Отказать', imgui.ImVec2(130,30)) then
-							if not inprocess then
-								windows.imgui_fm[0] = false
-								sampSendChat(format('Сожалею, %s, но Вы не смогли сдать устав. Подучите и приходите в следующий раз.', gsub(sampGetPlayerNickname(fastmenuID), '_', ' ')))
-							else
-								MedHelperMessage('Не торопитесь, Вы уже отыгрываете что-то! Прервать отыгровку: {MC}page down{WC}')
-							end
-						end
-						imgui.PopStyleColor(2)
-						imgui.Separator()
-
-						imgui.SetCursorPosX(7.5)
-						imgui.BeginGroup()
-							if serverquestions['server'] then
-								imgui.SetCursorPosY(imgui.GetCursorPosY() + 3)
-								imgui.Text(u8'Вопросы')
-								imgui.SameLine()
-								imgui.SetCursorPosY(imgui.GetCursorPosY() - 3)
-								imgui.PushItemWidth(90)
-								imgui.PushStyleVarVec2(imgui.StyleVar.WindowPadding,imgui.ImVec2(10,10))
-								imgui.Combo(u8'##choosetypequestion', QuestionType_select, new['const char*'][8]{u8'Серверные', u8'Ваши'}, 2)
-								imgui.PopStyleVar()
-								imgui.PopItemWidth()
-								imgui.SameLine()
-							end
-							if QuestionType_select[0] == 1 then
-								if not questions.active.redact then
-									imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(0.80, 0.25, 0.25, 1.00))
-									imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(0.70, 0.25, 0.25, 1.00))
-									imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(0.90, 0.25, 0.25, 1.00))
-								else
-									if #questions.questions <= 7 then
-										if imgui.Button(fa.ICON_FA_PLUS_CIRCLE,imgui.ImVec2(25,25)) then
-											question_number = nil
-											imgui.StrCopy(questionsettings.questionname, '')
-											imgui.StrCopy(questionsettings.questionhint, '')
-											imgui.StrCopy(questionsettings.questionques, '')
-											imgui.OpenPopup(u8('Редактор вопросов'))
-										end
-										imgui.SameLine()
-									end
-									imgui.PushStyleColor(imgui.Col.Button, imgui.ImVec4(0.00, 0.70, 0.00, 1.00))
-									imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(0.00, 0.60, 0.00, 1.00))
-									imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(0.00, 0.50, 0.00, 1.00))
-								end
-								if imgui.Button(fa.ICON_FA_COG, imgui.ImVec2(25,25)) then
-									questions.active.redact = not questions.active.redact
-								end
-								imgui.PopStyleColor(3)
-							end
-						imgui.EndGroup()
-						imgui.Spacing()
-						imgui.PushStyleVarVec2(imgui.StyleVar.WindowPadding, imgui.ImVec2(15,15))
-						if imgui.BeginPopup(u8'Редактор вопросов', _, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.AlwaysAutoResize) then
-							imgui.Text(u8'Название кнопки:')
-							imgui.SameLine()
-							imgui.SetCursorPosX(125)
-							imgui.InputText('##questeditorname', questionsettings.questionname, sizeof(questionsettings.questionname))
-							imgui.Text(u8'Вопрос: ')
-							imgui.SameLine()
-							imgui.SetCursorPosX(125)
-							imgui.InputText('##questeditorques', questionsettings.questionques, sizeof(questionsettings.questionques))
-							imgui.Text(u8'Подсказка: ')
-							imgui.SameLine()
-							imgui.SetCursorPosX(125)
-							imgui.InputText('##questeditorhint', questionsettings.questionhint, sizeof(questionsettings.questionhint))
-							imgui.SetCursorPosX(17)
-							if #str(questionsettings.questionhint) > 0 and #str(questionsettings.questionques) > 0 and #str(questionsettings.questionname) > 0 then
-								if imgui.Button(u8'Сохранить####questeditor', imgui.ImVec2(150, 25)) then
-									if question_number == nil then
-										questions.questions[#questions.questions + 1] = {
-											bname = u8:decode(str(questionsettings.questionname)),
-											bq = u8:decode(str(questionsettings.questionques)),
-											bhint = u8:decode(str(questionsettings.questionhint)),
-										}
-									else
-										questions.questions[question_number].bname = u8:decode(str(questionsettings.questionname))
-										questions.questions[question_number].bq = u8:decode(str(questionsettings.questionques))
-										questions.questions[question_number].bhint = u8:decode(str(questionsettings.questionhint))
-									end
-									local file = io.open(getWorkingDirectory()..'\\Med Helper\\Questions.json', 'w')
-									file:write(encodeJson(questions))
-									file:close()
-									imgui.CloseCurrentPopup()
-								end
-							else
-								imgui.LockedButton(u8'Сохранить####questeditor', imgui.ImVec2(150, 25))
-								imgui.Hint('notallparamsquesteditor','Вы ввели не все параметры. Перепроверьте всё.')
-							end
-							imgui.SameLine()
-							if imgui.Button(u8'Отменить##questeditor', imgui.ImVec2(150, 25)) then imgui.CloseCurrentPopup() end
-							imgui.Spacing()
-							imgui.EndPopup()
-						end
-						imgui.PopStyleVar()
-					elseif newwindowtype[0] == 12 then
+--проверка--
+					elseif newwindowtype[0] == 10 then
 						if leadertype[0] == 0 then
 							imgui.SetCursorPos(imgui.ImVec2(7.5, 15))
 							imgui.BeginGroup()
@@ -4156,10 +3807,8 @@ local imgui_fm = imgui.OnFrame(
 										osmtap[0] = 0
 										rectap[0] = 0
 										narkotap[0] = 0
-										koronatap[0] = 0
 										strtap[0] = 0
 										tatutap[0] = 0
-										osmotrtap[0] = 0
 										sobesetap[0] = 0
 										sobesdecline_select[0] = 0
 										lastq[0] = 0
@@ -4706,16 +4355,16 @@ local imgui_settings = imgui.OnFrame(
 									configuration.main_settings.recept = str(pricelist.recept)
 									inicfg.save(configuration,'Med Helper')
 								end
-								if imgui.InputText(u8'Коронавирус', pricelist.korona, sizeof(pricelist.korona), imgui.InputTextFlags.CharsDecimal) then
-									configuration.main_settings.korona = str(pricelist.korona)
-									inicfg.save(configuration,'Med Helper')
-								end
 								if imgui.InputText(u8'Страховка на 7', pricelist.str7, sizeof(pricelist.str7), imgui.InputTextFlags.CharsDecimal) then
 									configuration.main_settings.str7 = str(pricelist.str7)
 									inicfg.save(configuration,'Med Helper')
 								end
 								if imgui.InputText(u8'Страховка на 21', pricelist.str21, sizeof(pricelist.str21), imgui.InputTextFlags.CharsDecimal) then
 									configuration.main_settings.str21 = str(pricelist.str21)
+									inicfg.save(configuration,'Med Helper')
+								end
+								if imgui.InputText(u8'Мед.Осмотр', pricelist.osm, sizeof(pricelist.osm), imgui.InputTextFlags.CharsDecimal) then
+									configuration.main_settings.osm = str(pricelist.osm)
 									inicfg.save(configuration,'Med Helper')
 								end
 							imgui.EndGroup()
@@ -4747,10 +4396,6 @@ local imgui_settings = imgui.OnFrame(
 								end
 								if imgui.InputText(u8'Тату', pricelist.tatu, sizeof(pricelist.tatu), imgui.InputTextFlags.CharsDecimal) then
 									configuration.main_settings.tatu = str(pricelist.tatu)
-									inicfg.save(configuration,'Med Helper')
-								end
-								if imgui.InputText(u8'Мед.Осмотр', pricelist.osm, sizeof(pricelist.osm), imgui.InputTextFlags.CharsDecimal) then
-									configuration.main_settings.osm = str(pricelist.osm)
 									inicfg.save(configuration,'Med Helper')
 								end
 							imgui.EndGroup()
